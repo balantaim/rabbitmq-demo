@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app-network
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-server", "--version"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  producer:
+    build:
+      context: ./rabbitmq-producer
+    container_name: rabbitmq-producer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+      - redis
+    networks:
+      - app-network
+
+  consumer:
+    build:
+      context: ./rabbitmq-consumer
+    container_name: rabbitmq-consumer
+    ports:
+      - "8181:8181"
+    depends_on:
+      - rabbitmq
+      - redis
+    networks:
+      - app-network
+
+volumes:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
+
