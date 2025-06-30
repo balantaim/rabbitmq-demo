@@ -3,6 +3,9 @@ docker compose up -d
 #Get in Redis CLI
 docker exec -it redis redis-cli
 
+#Use RabbitMQ UI
+http://localhost:15672
+
 #Get all
 KEYS *
 
