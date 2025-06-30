@@ -9,8 +9,10 @@ http://localhost:15672
 
 ## Setup - Localhost
 
+Startup RabbitMQ and Redis containers
+
 ```bash
-cd cd rabbitmq-producer/
+cd rabbitmq-producer/
 ```
 ```bash
 docker compose up -d
